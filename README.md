@@ -39,3 +39,15 @@ StatefulWidget adalah widget yang memiliki state yang dapat berubah selama widge
 
 AI Disclosure:
 Pada tugas kali ini, saya menggunakan bantuan AI Gemini 4 Hydrogen untuk membantu memahami konsep cara kerja flutter dasar dan juga kegunaan setiap syntax dan parameter. Saya juga meminta bantuan untuk membantu saya memahami dan menjawab pertanyaan refleksif yang bersifat teoritis.
+
+### Tugas 8
+1. .push() biasa artinya kita melakukan push ke atas halaman lama, sehingga kita masih bisa kembali ke halaman sebelumnya. kalau pushReplacement() mengganti halaman saat ini sehingga tidak bisa kembali ke halaman sebelumnya. untuk pop adalah mengeluarkan halaman paling atas saat ini dan kembali ke halaman sebelumnya
+
+2. Scaffold menjadi kerangka tetap, AppBar jadi judul di atas, dan Drawer jadi menu samping, jadi setiap halaman punya struktur dan navigasi yang sama. Contohnya, warna utama portofolio (misalnya biru tua) diatur sekali di ThemeData, lalu otomatis dipakai oleh AppBar di halaman Home maupun halaman Formulir.
+
+3. Formulir disusun vertikal dalam Column karena paling mudah dibaca dan diisi di layar HP yang sempit. SizedBox/Padding memberi jarak antarkolom, sedangkan SingleChildScrollView membuat isi bisa digeser agar tidak overflow saat ruang layar terbatas atau papan ketik muncul.
+
+4. GlobalKey<FormState> adalah pegangan ke formulir, validator berisi aturan pemeriksaan tiap kolom, dan validate() menjalankan semua aturan itu saat Simpan ditekan; data hanya disimpan jika semuanya lolos. Contoh nilai yang ditolak: nama kosong atau umur -5. Jenis input/papan ketik saja belum cukup karena hanya mempermudah mengetik, tidak mencegah kolom kosong, nilai tidak masuk akal, atau teks yang ditempel dari luar.
+
+AI Disclosure:
+Saya menggunakan AI Gemini 4 Hydrogen untuk membantu menjelaskan konsep konsep flutter sehingga saya bisa menjawab pertanyaan pertanyaan yang ada di pertanyaan reflektif. Sisanya saya hanya meniru apa yang ada di tutorial dan menerapkannya ke modul baru
