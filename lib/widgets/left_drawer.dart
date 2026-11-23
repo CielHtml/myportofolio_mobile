@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/menu.dart';
 import 'package:myportofolio_mobile/project_form.dart';
+import 'package:myportofolio_mobile/education_form.dart';
 
 // TODO: Impor halaman ProjectFormPage jika sudah dibuat
 
@@ -56,6 +57,20 @@ class LeftDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ProjectFormPage(),
+                ),
+              );
+            },
+          ),
+
+          // Bagian 4: Menu navigasi ke halaman tambah pendidikan
+          ListTile(
+            leading: const Icon(Icons.school_outlined),
+            title: const Text('Add Education'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EducationFormPage(),
                 ),
               );
             },
