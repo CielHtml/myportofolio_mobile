@@ -1,23 +1,31 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/project_form.dart';
 import 'package:myportofolio_mobile/education_form.dart';
+import 'package:myportofolio_mobile/screens/login_screen.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
+  const MyHomePage({super.key});
 
   final String npm = "2506601275";
   final String nama = "Fadlan Fathul Islam";
   final String kelas = "PBP B";
-  final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
-    ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.green),
-    ItemHomepage("Tambah Pendidikan", Icons.school, Colors.teal),
-    ItemHomepage("Logout", Icons.logout, Colors.red),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthState>();
+
+    final List<ItemHomepage> items = [
+      ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
+      ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.green),
+      ItemHomepage("Tambah Pendidikan", Icons.school, Colors.teal),
+      auth.isLoggedIn
+          ? ItemHomepage("Logout", Icons.logout, Colors.red)
+          : ItemHomepage("Login", Icons.login, Colors.orange),
+    ];
+
     // Scaffold menyediakan struktur visual dasar halaman (AppBar, Body, SnackBar).
     return Scaffold(
       // AppBar menampilkan bar bagian atas halaman aplikasi.
@@ -82,8 +90,7 @@ class MyHomePage extends StatelessWidget {
             ],
           ),
         ),
-      )
-      
+      ),
     );
   }
 }
@@ -163,7 +170,7 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         // Aksi ketika kartu ditekan oleh pengguna.
-        onTap: () {
+        onTap: () async {
           // Memunculkan SnackBar ketika diklik
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -179,14 +186,27 @@ class ItemCard extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => const ProjectFormPage()),
             );
-          }
-          else if (item.name == "Tambah Pendidikan") {
+          } else if (item.name == "Tambah Pendidikan") {
+            final ok = await ensureLoggedIn(context);
+            if (!ok || !context.mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const EducationFormPage(),
               ),
             );
+          } else if (item.name == "Login") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          } else if (item.name == "Logout") {
+            final messenger = ScaffoldMessenger.of(context);
+            await context.read<AuthState>().logout();
+            if (!context.mounted) return;
+            messenger
+              ..hideCurrentSnackBar()
+              ..showSnackBar(const SnackBar(content: Text("Berhasil logout!")));
           }
         },
         child: Container(

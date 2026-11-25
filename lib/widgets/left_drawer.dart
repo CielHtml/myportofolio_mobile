@@ -1,7 +1,11 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/menu.dart';
 import 'package:myportofolio_mobile/project_form.dart';
 import 'package:myportofolio_mobile/education_form.dart';
+import 'package:myportofolio_mobile/screens/education_list_screen.dart';
+import 'package:myportofolio_mobile/screens/login_screen.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 // TODO: Impor halaman ProjectFormPage jika sudah dibuat
 
@@ -10,6 +14,8 @@ class LeftDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthState>();
+
     return Drawer(
       child: ListView(
         children: [
@@ -66,7 +72,9 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.school_outlined),
             title: const Text('Add Education'),
-            onTap: () {
+            onTap: () async {
+              final ok = await ensureLoggedIn(context);
+              if (!ok || !context.mounted) return;
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -75,6 +83,50 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+
+          // Bagian 5: Menu navigasi ke halaman daftar pendidikan
+          ListTile(
+            leading: const Icon(Icons.list_alt_outlined),
+            title: const Text('Education List'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EducationListScreen(),
+                ),
+              );
+            },
+          ),
+
+          const Divider(),
+
+          // Bagian 6: Menu autentikasi (Login / Logout)
+          if (auth.isLoggedIn)
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                await context.read<AuthState>().logout();
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                messenger
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(const SnackBar(content: Text('Logged out.')));
+              },
+            )
+          else
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+            ),
         ],
       ),
     );
